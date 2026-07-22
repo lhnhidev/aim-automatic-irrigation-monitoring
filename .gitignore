@@ -98,7 +98,6 @@ dmypy.json
 # File đã biên dịch (Prerequisites / Compiled objects)
 *.o
 *.ko
-*.obj
 *.elf
 *.i
 *.s
