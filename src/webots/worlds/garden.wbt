@@ -14,8 +14,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.8129740468654505 0.5388849020684666 0.22062697352289318 2.3296789661511808
-  position -8.026175622963299 12.801214551484229 15.524481185895505
+  orientation -0.577 0.577 0.577 2.094
+  position 0 2 20
   followType "None"
 }
 TexturedBackground {
@@ -159,7 +159,7 @@ DEF SPRINKLER1 Solid {
   children [
     Transform {
       translation -0.0137 0.1503 0.016
-      scale 0.35 0.35 0.35
+      scale 0.8 0.8 0.8
       children [
         CadShape {
           url [
@@ -176,7 +176,7 @@ DEF SPRINKLER2 Solid {
   children [
     Transform {
       translation -0.0137 0.1503 0.016
-      scale 0.35 0.35 0.35
+      scale 0.8 0.8 0.8
       children [
         CadShape {
           url [
@@ -720,4 +720,10 @@ DEF GRASS_8 Solid {
     }
   ]
   name "Grass_8"
+}
+
+Robot {
+  name "WaterSupervisor"
+  controller "water_controller"
+  supervisor TRUE
 }
