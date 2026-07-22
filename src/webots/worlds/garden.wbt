@@ -7,8 +7,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation -0.6057074460100905 0.6055593539714205 0.5161553629147421 2.220283553737552
-  position -2.6362435953705865 1.561732137648168 8.160075196764774
+  orientation -0.6752112536594256 0.6832233079879027 0.2780209962462087 2.5925931926160968
+  position -0.5288231571625904 189.91084677930593 189.3342867254941
 }
 TexturedBackground {
 }
@@ -865,7 +865,7 @@ Solid {
   rotation 0 1 0 1.4
   children [
     Transform {
-      scale 2.0 2.0 2.0
+      scale 2 2 2
       children [
         CadShape {
           url [
