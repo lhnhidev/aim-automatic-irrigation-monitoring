@@ -1,0 +1,257 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehout.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains / PyCharm / CLion / WebStorm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ------------------------------------------------------------------------------
+# 2. PYTHON
+# ------------------------------------------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Môi trường ảo (Virtual Environments)
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Phân phối / Đóng gói (Distribution / Packaging)
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Kiểm thử & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.nox/
+.tox/
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# MyPy & Type Checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+
+# ------------------------------------------------------------------------------
+# 3. C / C++
+# ------------------------------------------------------------------------------
+# File đã biên dịch (Prerequisites / Compiled objects)
+*.o
+*.ko
+*.obj
+*.elf
+*.i
+*.s
+
+# Thuật toán liên kết & Thư viện (Precompiled Headers & Libraries)
+*.gch
+*.pch
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.mod
+
+# Executables & Binaries
+*.exe
+*.out
+*.app
+*.bin
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+ctest_freertos/
+
+# Ninja & Make cache
+.ninja_deps
+.ninja_log
+
+# Visual Studio (C/C++)
+.vs/
+Debug/
+Release/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# ------------------------------------------------------------------------------
+# 4. NODE.JS / JAVASCRIPT / TYPESCRIPT
+# ------------------------------------------------------------------------------
+# Thư viện phụ thuộc (Dependencies)
+node_modules/
+jspm_packages/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Cache của công cụ quản lý gói
+.npm
+.eslintcache
+.stylelintcache
+.node_repl_history
+*.tsbuildinfo
+.yarn/cache
+.yarn/unplugged
+.pnpm-store
+
+# Thư mục build của Frameworks (Next.js, Nuxt, React, Angular, Vue)
+.next/
+.nuxt/
+dist/
+out/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+
+# ------------------------------------------------------------------------------
+# 5. IOT & HỆ THỐNG NHÚNG (EMBEDDED SYSTEMS)
+# ------------------------------------------------------------------------------
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.clang_complete
+
+# Arduino IDE
+applet/
+*.hex
+*.eep
+
+# ESP-IDF / Espressif (ESP32, ESP8266)
+build/
+sdkconfig.old
+sdkconfig.ci
+managed_components/
+dependencies.lock
+
+# Keil MDK ARM / C51
+*.bak
+*.dep
+*.duc
+*.d
+*.crf
+*.o
+*.lnp
+*.lst
+*.map
+*.htm
+*.build_log.htm
+*.axf
+*.uvgui.*
+*.uvopt.*
+JLinkLog.txt
+
+# STM32CubeIDE / Atollic TrueSTUDIO / Eclipse Embedded
+.settings/
+*.launch
+Debug/
+Release/
+
+# IAR Embedded Workbench
+*.ewt
+*.ewp.dep
+*.ewd
+settings/
+
+# MicroPython / CircuitPython
+.mpy/
+/firmware.bin
+
+# ------------------------------------------------------------------------------
+# 6. BẢO MẬT & CẤU HÌNH MÔI TRƯỜNG (SECRETS & ENVS)
+# ------------------------------------------------------------------------------
+# Lưu ý: Không bao giờ push file chứa mật khẩu, API key, chứng chỉ
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Secrets & Keys
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.id_rsa
+*.pub
+id_rsa
