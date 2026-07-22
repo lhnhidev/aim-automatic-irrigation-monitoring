@@ -1,0 +1,1185 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+
+WorldInfo {
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.6057074460100905 0.6055593539714205 0.5161553629147421 2.220283553737552
+  position -2.6362435953705865 1.561732137648168 8.160075196764774
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Solid {
+  translation 0 -0.05 0
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.25 0.46 0.22
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 200 0.1 200
+      }
+    }
+  ]
+  name "Lawn"
+}
+Solid {
+  translation 0 0.01 0
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.72 0.64 0.47
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 5 0.02 68
+      }
+    }
+  ]
+  name "MainPath"
+}
+Solid {
+  translation 0 0.012 -14
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.76 0.68 0.5
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 42 0.02 4
+      }
+    }
+  ]
+  name "CrossPathNorth"
+}
+Solid {
+  translation 0 0.012 14
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.76 0.68 0.5
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 42 0.02 4
+      }
+    }
+  ]
+  name "CrossPathSouth"
+}
+Solid {
+  translation -34 1.05 -34
+  rotation 0 1 0 0.4
+  children [
+    Transform {
+      scale 4 4 4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Tree_1_A_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "TreeNorthWest"
+}
+Solid {
+  translation 34 1.05 -33
+  rotation 0 1 0 -0.7
+  children [
+    Transform {
+      scale 4.2 4.2 4.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Tree_2_B_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "TreeNorthEast"
+}
+Solid {
+  translation -32 1.05 34
+  rotation 0 1 0 1.1
+  children [
+    Transform {
+      scale 4.1 4.1 4.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Tree_3_A_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "TreeSouthWest"
+}
+Solid {
+  translation 33 1.05 33
+  rotation 0 1 0 -1
+  children [
+    Transform {
+      scale 4.3 4.3 4.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Tree_4_A_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "TreeSouthEast"
+}
+Solid {
+  translation -18 0.02 -24
+  rotation 0 1 0 0.2
+  children [
+    Transform {
+      scale 5 5 5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Bush_1_A_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "BushWest1"
+}
+Solid {
+  translation -11 0.02 -22
+  rotation 0 1 0 -0.5
+  children [
+    Transform {
+      scale 5.2 5.2 5.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Bush_2_B_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "BushWest2"
+}
+Solid {
+  translation 12 0.02 -23
+  rotation 0 1 0 0.8
+  children [
+    Transform {
+      scale 5 5 5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Bush_3_A_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "BushEast1"
+}
+Solid {
+  translation 20 0.02 -25
+  rotation 0 1 0 -1
+  children [
+    Transform {
+      scale 5.1 5.1 5.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Bush_4_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "BushEast2"
+}
+Solid {
+  translation -22 0.02 24
+  rotation 0 1 0 0.6
+  children [
+    Transform {
+      scale 5.1 5.1 5.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Bush_2_F_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "BushSouthWest"
+}
+Solid {
+  translation 18 0.02 24
+  rotation 0 1 0 -0.3
+  children [
+    Transform {
+      scale 5 5 5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Bush_1_G_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "BushSouthEast"
+}
+Solid {
+  translation -29 0 0
+  rotation 0 1 0 0.4
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Rock_1_A_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "RockWest"
+}
+Solid {
+  translation 28 0 4
+  rotation 0 1 0 -0.8
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Rock_2_D_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "RockEast"
+}
+Solid {
+  translation -6 0 -10
+  rotation 0 1 0 0.5
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_1"
+}
+Solid {
+  translation -8 0 -5
+  rotation 0 1 0 -1.2
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_2"
+}
+Solid {
+  translation -10.8481 -0.104985 -5
+  rotation 0 1 0 -1.2
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_2(1)"
+}
+Solid {
+  translation -5 0 5
+  rotation 0 1 0 0.8
+  children [
+    Transform {
+      scale 2 2 2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_3"
+}
+Solid {
+  translation -9 0 10
+  rotation 0 1 0 -0.4
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_4"
+}
+Solid {
+  translation -14 0 -18
+  rotation 0 1 0 1.5
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_5"
+}
+Solid {
+  translation -19.1273 -0.00238593 -8
+  rotation 0 1 0 -0.9
+  children [
+    Transform {
+      scale 2.1 2.1 2.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_6"
+}
+Solid {
+  translation -15 0 -8
+  rotation 0 1 0 -0.9
+  children [
+    Transform {
+      scale 2.1 2.1 2.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_6(1)"
+}
+Solid {
+  translation -12 0 18
+  rotation 0 1 0 0.3
+  children [
+    Transform {
+      scale 2.6 2.6 2.6
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_7"
+}
+Solid {
+  translation -16 0 22
+  rotation 0 1 0 -1.1
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_8"
+}
+Solid {
+  translation -24 0 -10
+  rotation 0 1 0 0.7
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_9"
+}
+Solid {
+  translation -25 0 8
+  rotation 0 1 0 -0.6
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_10"
+}
+Solid {
+  translation -7 0 -22
+  rotation 0 1 0 0.9
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_11"
+}
+Solid {
+  translation -20 0 -3
+  rotation 0 1 0 -0.3
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_12"
+}
+Solid {
+  translation -22 0 16
+  rotation 0 1 0 1.2
+  children [
+    Transform {
+      scale 2.1 2.1 2.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_13"
+}
+Solid {
+  translation -10 0 26
+  rotation 0 1 0 -0.8
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_14"
+}
+Solid {
+  translation -28 0 -20
+  rotation 0 1 0 0.4
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_15"
+}
+Solid {
+  translation -4 0 12
+  rotation 0 1 0 -1.5
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassWest_16"
+}
+Solid {
+  translation 6 0 -10
+  rotation 0 1 0 -0.8
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_1"
+}
+Solid {
+  translation 8 0 -4
+  rotation 0 1 0 0.6
+  children [
+    Transform {
+      scale 2.1 2.1 2.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_2"
+}
+Solid {
+  translation 15 0 0
+  rotation 0 1 0 -0.4
+  children [
+    Transform {
+      scale 2.1 2.1 2.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassPatchCenterEast"
+}
+Solid {
+  translation 6 0 6
+  rotation 0 1 0 1.2
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_3"
+}
+Solid {
+  translation 10 0 11
+  rotation 0 1 0 -0.3
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_4"
+}
+Solid {
+  translation 14 0 -18
+  rotation 0 1 0 -1.5
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_5"
+}
+Solid {
+  translation 16 0 -9
+  rotation 0 1 0 0.9
+  children [
+    Transform {
+      scale 2 2 2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_6"
+}
+Solid {
+  translation 13 0 18
+  rotation 0 1 0 -0.5
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_7"
+}
+Solid {
+  translation 17 0 22
+  rotation 0 1 0 1
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_8"
+}
+Solid {
+  translation 23 0 -12
+  rotation 0 1 0 -0.7
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_9"
+}
+Solid {
+  translation 24 0 10
+  rotation 0 1 0 0.4
+  children [
+    Transform {
+      scale 2.6 2.6 2.6
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_10"
+}
+Solid {
+  translation 8 0 -22
+  rotation 0 1 0 -1.1
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_11"
+}
+Solid {
+  translation 19 0 -4
+  rotation 0 1 0 0.7
+  children [
+    Transform {
+      scale 2.1 2.1 2.1
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_12"
+}
+Solid {
+  translation 21 0 16
+  rotation 0 1 0 -0.9
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_13"
+}
+Solid {
+  translation 9 0 25
+  rotation 0 1 0 0.5
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_14"
+}
+Solid {
+  translation 27 0 -21
+  rotation 0 1 0 -0.2
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_15"
+}
+Solid {
+  translation 4 0 12
+  rotation 0 1 0 1.4
+  children [
+    Transform {
+      scale 2.0 2.0 2.0
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassEast_16"
+}
+Solid {
+  translation -30 0 -26
+  rotation 0 1 0 0.3
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_1"
+}
+Solid {
+  translation -26 0 -18
+  rotation 0 1 0 -0.7
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_2"
+}
+Solid {
+  translation -24 0 -2
+  rotation 0 1 0 0.9
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_3"
+}
+Solid {
+  translation -28 0 14
+  rotation 0 1 0 -1.1
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_4"
+}
+Solid {
+  translation -18 0 30
+  rotation 0 1 0 0.4
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_5"
+}
+Solid {
+  translation -6 0 26
+  rotation 0 1 0 -0.5
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_6"
+}
+Solid {
+  translation 7 0 28
+  rotation 0 1 0 0.8
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_7"
+}
+Solid {
+  translation 20 0 29
+  rotation 0 1 0 -0.9
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_8"
+}
+Solid {
+  translation 30 0 18
+  rotation 0 1 0 0.2
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_9"
+}
+Solid {
+  translation 28 0 2
+  rotation 0 1 0 -0.6
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_10"
+}
+Solid {
+  translation 25 0 -16
+  rotation 0 1 0 1
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_11"
+}
+Solid {
+  translation 18 0 -28
+  rotation 0 1 0 -0.4
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_12"
+}
+Solid {
+  translation 0 0 -28
+  rotation 0 1 0 0.7
+  children [
+    Transform {
+      scale 2.5 2.5 2.5
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_13"
+}
+Solid {
+  translation 0 0 22
+  rotation 0 1 0 -0.8
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_14"
+}
+Solid {
+  translation -12 0 0
+  rotation 0 1 0 1.1
+  children [
+    Transform {
+      scale 2.3 2.3 2.3
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_15"
+}
+Solid {
+  translation 12 0 0
+  rotation 0 1 0 -1.2
+  children [
+    Transform {
+      scale 2.4 2.4 2.4
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_D_Singlesided_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_16"
+}
+Solid {
+  translation -4 0 -20
+  rotation 0 1 0 0.5
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_1_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_17"
+}
+Solid {
+  translation 4 0 -20
+  rotation 0 1 0 -0.5
+  children [
+    Transform {
+      scale 2.2 2.2 2.2
+      children [
+        CadShape {
+          url [
+            "../assets/models/Grass_2_C_Color1.obj"
+          ]
+        }
+      ]
+    }
+  ]
+  name "GrassExtra_18"
+}
