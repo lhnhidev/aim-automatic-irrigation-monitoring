@@ -7,15 +7,15 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation -0.6752112536594256 0.6832233079879027 0.2780209962462087 2.5925931926160968
-  position -0.5288231571625904 189.91084677930593 189.3342867254941
+  orientation -0.640324877259366 0.7251250464451806 0.253333216496875 2.7011540985045945
+  position 1.2097944431069134 21.80402946298078 16.825853286430338
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 Solid {
-  translation 0 -0.05 0
+  translation 0 -0.05 -0.861773
   children [
     Shape {
       appearance PBRAppearance {
@@ -31,7 +31,7 @@ Solid {
   name "Lawn"
 }
 Solid {
-  translation 0 0.01 0
+  translation 0.42 0.01 -3.00759
   children [
     Shape {
       appearance PBRAppearance {
