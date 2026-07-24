@@ -727,3 +727,22 @@ Robot {
   controller "water_controller"
   supervisor TRUE
 }
+
+# Cảm biến nhiệt độ
+Robot {
+  translation 0 0.5 0
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.8 0.1 0.1
+        roughness 0.5
+      }
+      geometry Box {
+        size 0.2 0.8 0.2
+      }
+    }
+  ]
+  name "temp_sensor_node"
+  controller "temp_sensor_controller"
+  customData "25.0"
+}
