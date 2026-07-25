@@ -29,4 +29,48 @@ app.post("/api/water", (req, res) => {
   });
 });
 
+app.post("/api/smart-irrigate-check", async (req, res) => {
+  try {
+    // 1. Nhận dữ liệu cảm biến & thời tiết từ Frontend
+    const { soil_moisture, soil_temp, temp, humidity, light, rain_forecast } =
+      req.body;
+
+    // 2. Gửi request sang Python AI Service (Port 5001)
+    const aiResponse = await fetch("http://127.0.0.1:5001/predict", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        soil_moisture,
+        soil_temp,
+        temp,
+        humidity,
+        light,
+        rain_forecast,
+      }),
+    });
+
+    if (!aiResponse.ok) {
+      throw new Error("AI Service returned error");
+    }
+
+    const aiResult = await aiResponse.json();
+
+    // 3. Trả kết quả của AI về cho Frontend
+    res.json({
+      success: true,
+      data: aiResult,
+    });
+  } catch (error: any) {
+    console.error("❌ Error calling AI Service:", error.message);
+    res.status(500).json({
+      success: false,
+      message:
+        "Không thể kết nối tới mô hình AI! Hãy đảm bảo ai_service.py đang chạy.",
+      error: error.message,
+    });
+  }
+});
+
 app.listen(3000);
