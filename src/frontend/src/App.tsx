@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import React, { useState, useEffect, useMemo } from "react"
+import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Droplets,
@@ -19,13 +19,15 @@ import {
   BrainCircuit,
   CheckCircle2,
   Loader2,
-  ChevronRight
+  ChevronRight,
+  Wifi,
+  WifiOff
 } from "lucide-react"
 
 import { type LucideIcon } from "lucide-react"
 
 /* ------------------------------------------------------------------ */
-/*  TYPES                                                               */
+/*  TYPES                                                             */
 /* ------------------------------------------------------------------ */
 type Mode = "auto" | "manual"
 type ManualSubMode = "now" | "schedule"
@@ -60,9 +62,7 @@ interface ManualConfirmation {
 }
 
 /* ------------------------------------------------------------------ */
-/*  DESIGN TOKENS                                                      */
-/*  Bảng màu: nền đêm nông trại (deep indigo -> teal), điểm nhấn        */
-/*  emerald cho "sự sống / nước" và violet cho "AI".                    */
+/*  DESIGN TOKENS                                                     */
 /* ------------------------------------------------------------------ */
 const palette = {
   bgFrom: "#060B18",
@@ -71,7 +71,7 @@ const palette = {
 }
 
 /* ------------------------------------------------------------------ */
-/*  1. BACKGROUND — dải màu loang (gradient blobs) phía sau lớp kính    */
+/*  1. BACKGROUND                                                     */
 /* ------------------------------------------------------------------ */
 const AmbientBackground: React.FC = () => {
   return (
@@ -108,7 +108,6 @@ const AmbientBackground: React.FC = () => {
         animate={{ x: [0, 25, 0], y: [0, -20, 0] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
-      {/* lưới điểm mờ để tăng chiều sâu, gợi nhắc "ruộng đồng" */}
       <div
         className="absolute inset-0 opacity-[0.04]"
         style={{
@@ -122,7 +121,7 @@ const AmbientBackground: React.FC = () => {
 }
 
 /* ------------------------------------------------------------------ */
-/*  2. GLASS PANEL — khối kính mờ dùng chung cho mọi card               */
+/*  2. GLASS PANEL                                                    */
 /* ------------------------------------------------------------------ */
 interface GlassPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
@@ -143,7 +142,6 @@ const GlassPanel: React.FC<GlassPanelProps> = ({
       }
       {...props}
     >
-      {/* viền sáng mảnh phía trên để giả lập ánh phản chiếu trên kính */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-3xl bg-linear-to-r from-transparent via-white/40 to-transparent" />
       {children}
     </div>
@@ -151,19 +149,21 @@ const GlassPanel: React.FC<GlassPanelProps> = ({
 }
 
 /* ------------------------------------------------------------------ */
-/*  3. HEADER                                                          */
+/*  3. HEADER (Cập nhật hiển thị trạng thái Realtime)                 */
 /* ------------------------------------------------------------------ */
 interface DashboardHeaderProps {
   zoneName?: string
+  isConnected: boolean
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
-  zoneName = "Khu vườn A1"
+  zoneName = "Khu vườn A1",
+  isConnected
 }) => {
   const [now, setNow] = useState<Date>(new Date())
 
   useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000 * 30)
+    const t = setInterval(() => setNow(new Date()), 1000 * 10)
     return () => clearInterval(t)
   }, [])
 
@@ -174,30 +174,60 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <Sprout className="h-5 w-5 text-emerald-300" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-            Bảng điều khiển tưới tiêu
-          </h1>
-          <p className="text-sm text-white/50">
-            {zoneName} · cập nhật trực tiếp
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
+              Bảng điều khiển tưới tiêu
+            </h1>
+            {/* Đèn báo Realtime */}
+            <span className="relative flex h-2.5 w-2.5">
+              {isConnected && (
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              )}
+              <span
+                className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+                  isConnected ? "bg-emerald-500" : "bg-red-500"
+                }`}
+              ></span>
+            </span>
+          </div>
+          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-white/50">
+            {zoneName} ·{" "}
+            {isConnected ? "Đã kết nối Webots (3s)" : "Mất kết nối Webots"}
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-2 self-start rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/70 backdrop-blur-xl sm:self-auto">
-        <Clock className="h-4 w-4" />
-        {now.toLocaleString("vi-VN", {
-          weekday: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-          day: "2-digit",
-          month: "2-digit"
-        })}
+
+      <div className="flex items-center gap-3">
+        <div
+          className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium backdrop-blur-xl ${
+            isConnected
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+              : "border-red-500/30 bg-red-500/10 text-red-300"
+          }`}
+        >
+          {isConnected ? (
+            <Wifi className="h-3.5 w-3.5" />
+          ) : (
+            <WifiOff className="h-3.5 w-3.5" />
+          )}
+          {isConnected ? "LIVE" : "OFFLINE"}
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/70 backdrop-blur-xl">
+          <Clock className="h-4 w-4" />
+          {now.toLocaleString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          })}
+        </div>
       </div>
     </div>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/*  4. SENSOR CARD — 1 card cho mỗi thông số cảm biến                   */
+/*  4. SENSOR CARD & GRID                                             */
 /* ------------------------------------------------------------------ */
 interface SensorCardProps {
   icon: LucideIcon
@@ -235,7 +265,15 @@ const SensorCard: React.FC<SensorCardProps> = ({
           </div>
         </div>
         <div className="flex items-end gap-1">
-          <span className="text-3xl font-semibold text-white">{value}</span>
+          {/* Hiệu ứng chuyển số mượt mà khi value đổi */}
+          <motion.span
+            key={value}
+            initial={{ opacity: 0.5, y: -2 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl font-semibold text-white"
+          >
+            {value}
+          </motion.span>
           <span className="mb-0.5 text-sm text-white/50">{unit}</span>
         </div>
         {hint && <span className="text-xs text-white/40">{hint}</span>}
@@ -263,7 +301,12 @@ const SensorGrid: React.FC<SensorGridProps> = ({ data }) => {
       value: data.soilMoisture,
       unit: "%",
       accent: "#38BDF8",
-      hint: data.soilMoisture < 30 ? "Đất đang khô" : "Trong ngưỡng ổn định"
+      hint:
+        data.soilMoisture < 30
+          ? "Đất đang khô"
+          : data.soilMoisture <= 70
+            ? "Độ ẩm đạt ngưỡng tối ưu"
+            : "Đất đang quá ẩm / ngập nước"
     },
     {
       icon: Thermometer,
@@ -271,7 +314,12 @@ const SensorGrid: React.FC<SensorGridProps> = ({ data }) => {
       value: data.soilTemp,
       unit: "°C",
       accent: "#F97316",
-      hint: "Đo tại độ sâu 10cm"
+      hint:
+        data.soilTemp < 18
+          ? "Nhiệt độ đất lạnh"
+          : data.soilTemp <= 32
+            ? "Nhiệt độ đất lý tưởng"
+            : "Đất đang khá nóng"
     },
     {
       icon: Wind,
@@ -279,7 +327,12 @@ const SensorGrid: React.FC<SensorGridProps> = ({ data }) => {
       value: data.airTemp,
       unit: "°C",
       accent: "#FB923C",
-      hint: "Cảm biến ngoài trời"
+      hint:
+        data.airTemp < 20
+          ? "Thời tiết mát mẻ"
+          : data.airTemp <= 34
+            ? "Nhiệt độ môi trường ấm áp"
+            : "Trời nắng nóng gắt"
     },
     {
       icon: Cloud,
@@ -287,15 +340,27 @@ const SensorGrid: React.FC<SensorGridProps> = ({ data }) => {
       value: data.airHumidity,
       unit: "%",
       accent: "#22D3EE",
-      hint: "Trung bình 10 phút gần nhất"
+      hint:
+        data.airHumidity < 40
+          ? "Không khí khô hanh"
+          : data.airHumidity <= 75
+            ? "Độ ẩm không khí vừa phải"
+            : "Độ ẩm cao, có thể sắp mưa"
     },
     {
       icon: Sun,
       label: "Cường độ ánh sáng",
       value: data.lightIntensity,
-      unit: "klux",
+      unit: "lux",
       accent: "#FACC15",
-      hint: data.lightIntensity > 50 ? "Nắng gắt" : "Ánh sáng dịu"
+      hint:
+        data.lightIntensity < 50
+          ? "Trời tối / Ban đêm"
+          : data.lightIntensity < 10000
+            ? "Ánh sáng yếu / Nhiều mây"
+            : data.lightIntensity <= 40000
+              ? "Ánh sáng mặt trời vừa"
+              : "Nắng gắt ngoài trời"
     }
   ]
 
@@ -309,45 +374,137 @@ const SensorGrid: React.FC<SensorGridProps> = ({ data }) => {
 }
 
 /* ------------------------------------------------------------------ */
-/*  5. WEATHER FORECAST                                                 */
+/*  5. WEATHER FORECAST                                               */
 /* ------------------------------------------------------------------ */
 interface WeatherForecastCardProps {
-  forecast: ForecastItem[]
+  // Tọa độ tùy chỉnh (Mặc định: Hà Nội / TP.HCM hoặc lấy từ GPS)
+  latitude?: number
+  longitude?: number
 }
 
 const WeatherForecastCard: React.FC<WeatherForecastCardProps> = ({
-  forecast
+  latitude = 10.030198, // Toa do o Dai hoc Can Tho
+  longitude = 105.764434
 }) => {
+  const [forecast, setForecast] = useState<ForecastItem[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<boolean>(false)
+
+  // Hàm chuyển đổi WMO Weather Code sang type icon giao diện
+  const mapWmoCodeToType = (code: number): ForecastType => {
+    if (code === 0 || code === 1) return "sun"
+    if (code === 2 || code === 3) return "cloudy"
+    if (code >= 51 && code <= 67) return "rain"
+    if (code >= 80 && code <= 82) return "rain"
+    if (code >= 95) return "storm"
+    return "cloudy"
+  }
+
+  const fetchWeatherForecast = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(false)
+
+      // Gọi API Open-Meteo cho thời tiết trong ngày (hourly)
+      const res = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto&forecast_days=1`
+      )
+
+      if (!res.ok) throw new Error("Fetch weather failed")
+
+      const data = await res.json()
+      const hourly = data.hourly
+
+      // Lấy giờ hiện tại để chỉ lọc ra các khung giờ từ thời điểm này trở đi (hoặc lấy giãn cách 3 tiếng/lần)
+      const currentHour = new Date().getHours()
+
+      const formattedForecast: ForecastItem[] = []
+
+      // Lặp qua các mốc giờ trong ngày (lấy 6 mốc thời gian tiếp theo, mỗi mốc cách nhau 3 tiếng)
+      for (let i = 0; i < hourly.time.length; i += 3) {
+        const dateObj = new Date(hourly.time[i])
+        const hour = dateObj.getHours()
+
+        // Bỏ qua các giờ đã qua trong quá khứ của ngày hôm nay
+        if (hour < currentHour && currentHour - hour > 2) continue
+
+        formattedForecast.push({
+          time: `${hour.toString().padStart(2, "0")}:00`,
+          type: mapWmoCodeToType(hourly.weather_code[i]),
+          temp: Math.round(hourly.temperature_2m[i]),
+          rainChance: hourly.precipitation_probability[i] || 0
+        })
+
+        if (formattedForecast.length >= 6) break // Chỉ lấy tối đa 6 khung giờ hiển thị
+      }
+
+      setForecast(formattedForecast)
+    } catch (err) {
+      console.error("Lỗi lấy dữ liệu thời tiết:", err)
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
+  }, [latitude, longitude])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchWeatherForecast()
+
+    // Cập nhật lại dự báo thời tiết mỗi 30 phút
+    const interval = setInterval(fetchWeatherForecast, 30 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [fetchWeatherForecast])
+
   return (
     <GlassPanel className="p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-white/70">Dự báo thời tiết</h3>
+        <h3 className="text-sm font-medium text-white/70">
+          Dự báo thời tiết (Đại học Cần Thơ)
+        </h3>
         <CloudSun className="h-4 w-4 text-white/40" />
       </div>
-      <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
-        {forecast.map((f, i) => {
-          const Icon = sensorIconMap[f.type] || CloudSun
-          return (
-            <div
-              key={i}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-2 py-3"
-            >
-              <span className="text-xs text-white/45">{f.time}</span>
-              <Icon className="h-5 w-5 text-sky-300" />
-              <span className="text-sm font-medium text-white">{f.temp}°</span>
-              <span className="text-[11px] text-white/40">
-                {f.rainChance}% mưa
-              </span>
-            </div>
-          )
-        })}
-      </div>
+
+      {loading ? (
+        <div className="flex h-24 items-center justify-center gap-2 text-sm text-white/50">
+          <Loader2 className="h-4 w-4 animate-spin text-sky-300" />
+          Đang tải dự báo thời tiết...
+        </div>
+      ) : error ? (
+        <div className="flex h-24 items-center justify-center text-xs text-red-300">
+          Không thể lấy dữ liệu thời tiết.
+          <button onClick={fetchWeatherForecast} className="ml-2 underline">
+            Thử lại
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+          {forecast.map((f, i) => {
+            const Icon = sensorIconMap[f.type] || CloudSun
+            return (
+              <div
+                key={i}
+                className="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-2 py-3"
+              >
+                <span className="text-xs text-white/45">{f.time}</span>
+                <Icon className="h-5 w-5 text-sky-300" />
+                <span className="text-sm font-medium text-white">
+                  {f.temp}°C
+                </span>
+                <span className="text-[11px] text-white/40">
+                  {f.rainChance}% mưa
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </GlassPanel>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/*  6. MODE TOGGLE — chuyển Tự động / Thủ công                          */
+/*  6. MODE TOGGLE                                                    */
 /* ------------------------------------------------------------------ */
 interface ModeToggleProps {
   mode: Mode
@@ -396,11 +553,10 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onChange }) => {
 }
 
 /* ------------------------------------------------------------------ */
-/*  7. AUTO MODE PANEL — gọi API AI để lấy khuyến nghị tưới              */
-/*     Thay hàm mockFetchAiPrediction bằng lệnh gọi API thật của bạn.    */
+/*  7. AUTO MODE PANEL                                                */
 /* ------------------------------------------------------------------ */
 const mockFetchAiPrediction = async (): Promise<AiPrediction> => {
-  await new Promise((resolve) => setTimeout(resolve, 1400))
+  await new Promise((resolve) => setTimeout(resolve, 800))
   const shouldIrrigate = Math.random() > 0.5
   return {
     shouldIrrigate,
@@ -409,8 +565,8 @@ const mockFetchAiPrediction = async (): Promise<AiPrediction> => {
       ? new Date(Date.now() + 1000 * 60 * 35).toISOString()
       : null,
     reason: shouldIrrigate
-      ? "Độ ẩm đất dưới ngưỡng tối ưu và trời sắp nắng gắt."
-      : "Độ ẩm đất và dự báo mưa cho thấy chưa cần tưới lúc này."
+      ? "Độ ẩm đất dưới ngưỡng tối ưu và nắng gắt ngoài trời."
+      : "Độ ẩm đất và dự báo thời tiết cho thấy chưa cần tưới lúc này."
   }
 }
 
@@ -421,15 +577,11 @@ const AutoModePanel: React.FC = () => {
   const runPrediction = async (): Promise<void> => {
     setStatus("loading")
     try {
-      // TODO: thay bằng API thật, ví dụ:
-      // const res = await fetch("/api/ai/irrigation-predict", { method: "POST" });
-      // const data: AiPrediction = await res.json();
       const data = await mockFetchAiPrediction()
       setPrediction(data)
       setStatus("done")
     } catch (e) {
       setStatus("error")
-      // eslint-disable-next-line no-console
       console.log(e)
     }
   }
@@ -559,7 +711,7 @@ const AutoModePanel: React.FC = () => {
 }
 
 /* ------------------------------------------------------------------ */
-/*  8. MANUAL MODE PANEL — tưới ngay hoặc hẹn giờ                       */
+/*  8. MANUAL MODE PANEL                                              */
 /* ------------------------------------------------------------------ */
 const ManualModePanel: React.FC = () => {
   const [subMode, setSubMode] = useState<ManualSubMode>("now")
@@ -574,15 +726,11 @@ const ManualModePanel: React.FC = () => {
   }, [])
 
   const handleIrrigateNow = (): void => {
-    // TODO: gọi API tưới ngay thật, ví dụ: fetch('/api/irrigation/now', { method: 'POST' })
     setConfirmed({ type: "now", at: new Date() })
   }
 
   const handleSchedule = (): void => {
-    // eslint-disable-next-line curly
     if (!scheduledTime) return
-    // TODO: gọi API đặt lịch thật, ví dụ:
-    // fetch('/api/irrigation/schedule', { method: 'POST', body: JSON.stringify({ at: scheduledTime }) })
     setConfirmed({ type: "schedule", at: new Date(scheduledTime) })
   }
 
@@ -602,7 +750,6 @@ const ManualModePanel: React.FC = () => {
         </div>
       </div>
 
-      {/* chọn: tưới ngay / hẹn giờ */}
       <div className="flex gap-2">
         <button
           onClick={() => setSubMode("now")}
@@ -699,19 +846,54 @@ const ManualModePanel: React.FC = () => {
 }
 
 /* ------------------------------------------------------------------ */
-/*  9. ROOT DASHBOARD                                                   */
+/*  9. ROOT DASHBOARD (Tích hợp Fetch Realtime 3s)                     */
 /* ------------------------------------------------------------------ */
 const IrrigationDashboard: React.FC = () => {
   const [mode, setMode] = useState<Mode>("auto")
+  const [isConnected, setIsConnected] = useState<boolean>(true)
 
-  // Dữ liệu mẫu — thay bằng dữ liệu thật lấy từ API / websocket cảm biến
-  const sensorData: SensorData = {
-    soilMoisture: 42,
-    soilTemp: 27,
-    airTemp: 31,
-    airHumidity: 64,
-    lightIntensity: 58
-  }
+  // State lưu thông số cảm biến realtime
+  const [sensorData, setSensorData] = useState<SensorData>({
+    soilMoisture: 0,
+    soilTemp: 0,
+    airTemp: 0,
+    airHumidity: 0,
+    lightIntensity: 0
+  })
+
+  // Hàm Fetch API lấy dữ liệu mô phỏng từ Server (đã nhận từ Webots qua MQTT/REST)
+  const fetchRealtimeSensors = useCallback(async () => {
+    try {
+      // TODO: Thay đường dẫn API backend của bạn vào đây
+      // const res = await fetch("http://localhost:5000/api/sensors/latest")
+      // const data = await res.json()
+
+      // GIA LẬP TRONG KHI BẠN CHƯA NỐI API BACKEND:
+      // (Nhớ bỏ đoạn fake này khi đã nối với Database/Backend thật)
+      const data: SensorData = {
+        soilMoisture: Number((35 + Math.random() * 5).toFixed(1)),
+        soilTemp: Number((26 + Math.random() * 2).toFixed(1)),
+        airTemp: Number((30 + Math.random() * 3).toFixed(1)),
+        airHumidity: Number((60 + Math.random() * 10).toFixed(1)),
+        lightIntensity: Number((15000 + Math.random() * 50000).toFixed(0))
+      }
+
+      setSensorData(data)
+      setIsConnected(true)
+    } catch (error) {
+      console.error("Lỗi khi fetch dữ liệu cảm biến:", error)
+      setIsConnected(false)
+    }
+  }, [])
+
+  // Hook Polling: Tự động chạy mỗi 3000ms (3 giây)
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchRealtimeSensors() // Gọi lần đầu ngay khi mount
+    const interval = setInterval(fetchRealtimeSensors, 3000)
+
+    return () => clearInterval(interval) // Clear timer khi unmount
+  }, [fetchRealtimeSensors])
 
   const forecast: ForecastItem[] = [
     { time: "12h", type: "sun", temp: 33, rainChance: 5 },
@@ -727,7 +909,7 @@ const IrrigationDashboard: React.FC = () => {
       <AmbientBackground />
 
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
-        <DashboardHeader />
+        <DashboardHeader isConnected={isConnected} />
 
         <SensorGrid data={sensorData} />
 
