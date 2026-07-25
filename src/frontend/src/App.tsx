@@ -717,6 +717,7 @@ const ManualModePanel: React.FC = () => {
   const [subMode, setSubMode] = useState<ManualSubMode>("now")
   const [scheduledTime, setScheduledTime] = useState<string>("")
   const [confirmed, setConfirmed] = useState<ManualConfirmation | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const minDateTime = useMemo<string>(() => {
     // eslint-disable-next-line react-hooks/purity
@@ -725,14 +726,45 @@ const ManualModePanel: React.FC = () => {
     return d.toISOString().slice(0, 16)
   }, [])
 
-  const handleIrrigateNow = (): void => {
-    setConfirmed({ type: "now", at: new Date() })
+  const handleIrrigateNow = async () => {
+    localStorage.setItem(
+      "button",
+      localStorage.getItem("button") === "Tưới ngay bây giờ"
+        ? "Dừng tưới"
+        : "Tưới ngay bây giờ"
+    )
+    setLoading(true)
+    try {
+      // Gọi API Backend (Thay URL theo đúng route backend của bạn)
+      const response = await fetch("http://localhost:3000/api/water", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ action: "START_WATERING" }) // Hoặc 'TOGGLE_WATERING'
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        alert(" Bắt đầu tưới nước thành công!")
+      } else {
+        alert(`❌ Lỗi: ${data.message || "Không thể bật tưới nước"}`)
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API tưới nước:", error)
+      alert("❌ Không thể kết nối tới Server Backend!")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSchedule = (): void => {
     if (!scheduledTime) return
     setConfirmed({ type: "schedule", at: new Date(scheduledTime) })
   }
+
+  localStorage.setItem("button", "Tưới ngay bây giờ")
 
   return (
     <GlassPanel className="flex flex-col gap-5 p-6">
@@ -790,10 +822,15 @@ const ManualModePanel: React.FC = () => {
             </p>
             <button
               onClick={handleIrrigateNow}
-              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-400 to-sky-400 py-3 text-sm font-semibold text-[#06251c] shadow-lg shadow-emerald-500/20 transition active:scale-[0.98]"
+              disabled={loading}
+              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-emerald-400 to-sky-400 px-4 py-3 text-sm font-semibold text-[#06251c] shadow-lg shadow-emerald-500/20 transition active:scale-[0.98] disabled:opacity-50"
             >
-              <Zap className="h-4 w-4" />
-              Tưới ngay bây giờ
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Zap className="h-4 w-4" />
+              )}
+              {loading ? "Đang gửi lệnh..." : "Bật / Tắt"}
             </button>
           </motion.div>
         ) : (
