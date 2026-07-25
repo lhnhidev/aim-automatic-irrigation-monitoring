@@ -14,8 +14,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.577 0.577 0.577 2.094
-  position 0 2 20
+  orientation -0.6351811539823081 0.6615736821041149 0.3985789316721434 2.4621774591083616
+  position 1.3840605269769641 4.56550211607606 5.568917171210852
   followType "None"
 }
 TexturedBackground {
@@ -721,16 +721,13 @@ DEF GRASS_8 Solid {
   ]
   name "Grass_8"
 }
-
 Robot {
   name "WaterSupervisor"
   controller "water_controller"
   supervisor TRUE
 }
-
-# Cảm biến nhiệt độ
 Robot {
-  translation 0 0.5 0
+  translation 0.935837 0.4 -2.00351
   children [
     Shape {
       appearance PBRAppearance {
@@ -745,4 +742,72 @@ Robot {
   name "temp_sensor_node"
   controller "temp_sensor_controller"
   customData "25.0"
+}
+Robot {
+  translation 1.23786 0.4 -1.99702
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.1 0.4 0.9
+        roughness 0.5
+      }
+      geometry Box {
+        size 0.2 0.8 0.2
+      }
+    }
+  ]
+  name "humidity_sensor_node"
+  controller "humidity_sensor_controller"
+  customData "65.0"
+}
+Robot {
+  translation 1.54951 0.4 -1.99026
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.4 0.2 0.1
+        roughness 0.8
+      }
+      geometry Box {
+        size 0.2 0.8 0.2
+      }
+    }
+  ]
+  name "soil_temp_sensor_node"
+  controller "soil_temp_sensor_controller"
+  customData "22.5"
+}
+Robot {
+  translation 1.87438 0.4 -1.98194
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.9 0.5 0.1
+        roughness 0.8
+      }
+      geometry Box {
+        size 0.2 0.8 0.2
+      }
+    }
+  ]
+  name "soil_moisture_sensor_node"
+  controller "soil_moisture_sensor_controller"
+  customData "45.0"
+}
+Robot {
+  translation 2.19275 0.4 -1.98177
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.9 0.9 0.1
+        roughness 0.3
+      }
+      geometry Box {
+        size 0.2 0.8 0.2
+      }
+    }
+  ]
+  name "light_sensor_node"
+  controller "light_sensor_controller"
+  customData "800.0"
 }
