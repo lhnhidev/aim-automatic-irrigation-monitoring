@@ -56,6 +56,8 @@ while robot.step(time_step) != -1:
 
         sensor_reading = round(current_lux, 1)
 
+        # sensor_reading = 50
+
         payload = {
             "timestamp": round(sim_time, 1),
             "light_intensity": sensor_reading,

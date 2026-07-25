@@ -35,6 +35,8 @@ while robot.step(time_step) != -1:
             current_val = max(MIN_VAL, min(MAX_VAL, current_val + delta))
         sensor_reading = round(current_val, 2)
 
+        # sensor_reading = 50
+
         payload = {"timestamp": round(sim_time, 1), "soil_temperature": sensor_reading, "unit": "C"}
         json_data = json.dumps(payload)
 

@@ -1,4 +1,6 @@
-/* eslint-disable indent */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-console */
+/* eslint-disable curly */
 import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
@@ -19,12 +21,14 @@ import {
   BrainCircuit,
   CheckCircle2,
   Loader2,
-  ChevronRight,
   Wifi,
-  WifiOff
+  WifiOff,
+  RefreshCw,
+  MessageSquareText
 } from "lucide-react"
 
 import { type LucideIcon } from "lucide-react"
+import { AutoIrrigationToggle } from "./AutoIrrigationToggle"
 
 /* ------------------------------------------------------------------ */
 /*  TYPES                                                             */
@@ -47,13 +51,6 @@ interface ForecastItem {
   type: ForecastType
   temp: number
   rainChance: number
-}
-
-interface AiPrediction {
-  shouldIrrigate: boolean
-  confidence: number
-  scheduledAt: string | null
-  reason: string
 }
 
 interface ManualConfirmation {
@@ -555,44 +552,106 @@ const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onChange }) => {
 /* ------------------------------------------------------------------ */
 /*  7. AUTO MODE PANEL                                                */
 /* ------------------------------------------------------------------ */
-const mockFetchAiPrediction = async (): Promise<AiPrediction> => {
-  await new Promise((resolve) => setTimeout(resolve, 800))
-  const shouldIrrigate = Math.random() > 0.5
-  return {
-    shouldIrrigate,
-    confidence: Math.round(70 + Math.random() * 25),
-    scheduledAt: shouldIrrigate
-      ? new Date(Date.now() + 1000 * 60 * 35).toISOString()
-      : null,
-    reason: shouldIrrigate
-      ? "Độ ẩm đất dưới ngưỡng tối ưu và nắng gắt ngoài trời."
-      : "Độ ẩm đất và dự báo thời tiết cho thấy chưa cần tưới lúc này."
-  }
+interface AiPredictionData {
+  should_water: boolean
+  confidence: number
+  message: string
 }
 
-const AutoModePanel: React.FC = () => {
+export const AutoModePanel: React.FC<SensorGridProps> = ({ data }) => {
   const [status, setStatus] = useState<PredictionStatus>("loading")
-  const [prediction, setPrediction] = useState<AiPrediction | null>(null)
+  const [prediction, setPrediction] = useState<AiPredictionData | null>(null)
 
+  // Hàm gọi API dự đoán AI từ Backend Node.js
   const runPrediction = async (): Promise<void> => {
     setStatus("loading")
     try {
-      const data = await mockFetchAiPrediction()
-      setPrediction(data)
-      setStatus("done")
+      // 1. Tọa độ Đại học Cần Thơ
+      const latitude = 10.030198
+      const longitude = 105.764434
+
+      // 2. Gọi Open-Meteo API
+      const weatherRes = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto&forecast_days=1`
+      )
+
+      let rainForecastPercent = 0 // Mặc định nếu API lỗi
+
+      if (weatherRes.ok) {
+        const weatherData = await weatherRes.json()
+        const hourlyTimes: string[] = weatherData.hourly.time
+        const hourlyRainProb: number[] =
+          weatherData.hourly.precipitation_probability
+
+        // Lấy thời gian hiện tại theo ISO string
+        const now = new Date()
+
+        // Tìm thời điểm trong mảng "time" của API gần nhất và lớn hơn/bằng thời gian hiện tại
+        let closestIndex = hourlyTimes.findIndex(
+          (tStr) => new Date(tStr) >= now
+        )
+
+        // Nếu không tìm thấy giờ trong tương lai (ví dụ cuối ngày), lấy giờ cuối cùng
+        if (closestIndex === -1) {
+          closestIndex = hourlyTimes.length - 1
+        }
+
+        // % khả năng mưa tại thời điểm đó
+        rainForecastPercent = hourlyRainProb[closestIndex] ?? 0
+        console.log(
+          `🌧️ Dự báo khả năng mưa Open-Meteo (${hourlyTimes[closestIndex]}): ${rainForecastPercent}%`
+        )
+      }
+
+      // 3. Đóng gói dữ liệu cảm biến + % mưa thực tế từ Open-Meteo
+      const currentSensorData = {
+        soil_moisture: data.soilMoisture,
+        soil_temp: data.soilTemp,
+        temp: data.airTemp,
+        humidity: data.airHumidity,
+        light: data.lightIntensity,
+        rain_forecast: rainForecastPercent // % Khả năng mưa từ Open-Meteo
+      }
+
+      // 4. Gửi dữ liệu sang Backend Node.js
+      const response = await fetch(
+        "http://localhost:3000/api/smart-irrigate-check",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(currentSensorData)
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error("Không thể gọi API dự đoán")
+      }
+
+      const result = await response.json()
+
+      if (result.success && result.data) {
+        setPrediction(result.data)
+        setStatus("done")
+      } else {
+        setStatus("error")
+      }
     } catch (e) {
+      console.error("Lỗi khi kết nối API:", e)
       setStatus("error")
-      console.log(e)
     }
   }
 
+  // Tự động gọi API khi mở App/Component vừa mount
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     runPrediction()
   }, [])
 
   return (
-    <GlassPanel className="flex flex-col gap-5 p-6">
+    <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-md">
+      {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/15 bg-linear-to-br from-emerald-400/20 to-sky-400/20">
           <BrainCircuit className="h-5 w-5 text-emerald-300" />
@@ -607,7 +666,10 @@ const AutoModePanel: React.FC = () => {
         </div>
       </div>
 
+      <AutoIrrigationToggle sensorData={data} />
+
       <AnimatePresence mode="wait">
+        {/* State: LOADING */}
         {status === "loading" && (
           <motion.div
             key="loading"
@@ -623,6 +685,7 @@ const AutoModePanel: React.FC = () => {
           </motion.div>
         )}
 
+        {/* State: DONE */}
         {status === "done" && prediction && (
           <motion.div
             key="done"
@@ -631,82 +694,89 @@ const AutoModePanel: React.FC = () => {
             exit={{ opacity: 0 }}
             className="space-y-4"
           >
+            {/* Banner Khuyến nghị */}
             <div
-              className="flex items-start gap-3 rounded-2xl border px-4 py-4"
+              className="flex items-start gap-3 rounded-2xl border px-4 py-4 transition-all"
               style={{
-                borderColor: prediction.shouldIrrigate
+                borderColor: prediction.should_water
                   ? "rgba(52,211,153,0.35)"
                   : "rgba(255,255,255,0.12)",
-                background: prediction.shouldIrrigate
+                background: prediction.should_water
                   ? "rgba(52,211,153,0.08)"
                   : "rgba(255,255,255,0.04)"
               }}
             >
-              {prediction.shouldIrrigate ? (
+              {prediction.should_water ? (
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
               ) : (
                 <Droplets className="mt-0.5 h-5 w-5 shrink-0 text-white/40" />
               )}
               <div>
                 <p className="text-sm font-medium text-white">
-                  {prediction.shouldIrrigate
+                  {prediction.should_water
                     ? "AI khuyến nghị nên tưới nước"
                     : "AI khuyến nghị chưa cần tưới"}
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-white/50">
-                  {prediction.reason}
+                  {prediction.should_water
+                    ? "Độ ẩm đất thấp hơn ngưỡng tiêu chuẩn hoặc thời tiết nắng nóng."
+                    : "Đất vẫn duy trì độ ẩm tốt hoặc dự báo sắp có mưa."}
                 </p>
               </div>
             </div>
 
+            {/* Grid Thông số: Độ tin cậy & Chú thích Message */}
             <div className="grid grid-cols-2 gap-3">
+              {/* Ô Độ tin cậy */}
               <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                 <p className="text-xs text-white/40">Độ tin cậy</p>
-                <p className="text-lg font-semibold text-white">
+                <p className="mt-1 text-lg font-semibold text-white">
                   {prediction.confidence}%
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                <p className="text-xs text-white/40">Thời điểm dự kiến</p>
-                <p className="text-lg font-semibold text-white">
-                  {prediction.scheduledAt
-                    ? new Date(prediction.scheduledAt).toLocaleTimeString(
-                        "vi-VN",
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit"
-                        }
-                      )
-                    : "—"}
+
+              {/* Ô Chú thích (data.message) */}
+              <div className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className="flex items-center gap-1.5 text-xs text-white/40">
+                  <MessageSquareText className="h-3.5 w-3.5 text-sky-300" />
+                  <span>Chú thích</span>
+                </div>
+                <p className="mt-1 line-clamp-2 text-xs leading-relaxed font-medium text-white/80">
+                  {prediction.message || "Không có chú thích."}
                 </p>
               </div>
             </div>
 
+            {/* Nút Phân tích lại */}
             <button
               onClick={runPrediction}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-2.5 text-sm text-white/70 transition hover:bg-white/10"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-2.5 text-sm text-white/70 transition hover:bg-white/10 active:scale-[0.99]"
             >
-              <ChevronRight className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4" />
               Yêu cầu AI phân tích lại
             </button>
           </motion.div>
         )}
 
+        {/* State: ERROR */}
         {status === "error" && (
           <motion.div
             key="error"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="rounded-2xl border border-red-400/30 bg-red-400/10 px-4 py-4 text-sm text-red-200"
+            className="flex items-center justify-between rounded-2xl border border-red-400/30 bg-red-400/10 px-4 py-4 text-sm text-red-200"
           >
-            Không thể kết nối tới AI. Vui lòng thử lại.
-            <button onClick={runPrediction} className="ml-2 underline">
+            <span>Không thể kết nối tới AI. Vui lòng kiểm tra lại Server.</span>
+            <button
+              onClick={runPrediction}
+              className="ml-2 rounded-lg bg-red-400/20 px-3 py-1 text-xs font-semibold underline hover:bg-red-400/30"
+            >
               Thử lại
             </button>
           </motion.div>
         )}
       </AnimatePresence>
-    </GlassPanel>
+    </div>
   )
 }
 
@@ -902,20 +972,10 @@ const IrrigationDashboard: React.FC = () => {
   const fetchRealtimeSensors = useCallback(async () => {
     try {
       // TODO: Thay đường dẫn API backend của bạn vào đây
-      // const res = await fetch("http://localhost:5000/api/sensors/latest")
-      // const data = await res.json()
+      const res = await fetch("http://localhost:3000/api/sensors")
+      const data = await res.json()
 
-      // GIA LẬP TRONG KHI BẠN CHƯA NỐI API BACKEND:
-      // (Nhớ bỏ đoạn fake này khi đã nối với Database/Backend thật)
-      const data: SensorData = {
-        soilMoisture: Number((35 + Math.random() * 5).toFixed(1)),
-        soilTemp: Number((26 + Math.random() * 2).toFixed(1)),
-        airTemp: Number((30 + Math.random() * 3).toFixed(1)),
-        airHumidity: Number((60 + Math.random() * 10).toFixed(1)),
-        lightIntensity: Number((15000 + Math.random() * 50000).toFixed(0))
-      }
-
-      setSensorData(data)
+      setSensorData(data.data)
       setIsConnected(true)
     } catch (error) {
       console.error("Lỗi khi fetch dữ liệu cảm biến:", error)
@@ -932,15 +992,6 @@ const IrrigationDashboard: React.FC = () => {
     return () => clearInterval(interval) // Clear timer khi unmount
   }, [fetchRealtimeSensors])
 
-  const forecast: ForecastItem[] = [
-    { time: "12h", type: "sun", temp: 33, rainChance: 5 },
-    { time: "15h", type: "cloudy", temp: 31, rainChance: 20 },
-    { time: "18h", type: "rain", temp: 28, rainChance: 65 },
-    { time: "21h", type: "rain", temp: 26, rainChance: 40 },
-    { time: "00h", type: "cloudy", temp: 25, rainChance: 15 },
-    { time: "03h", type: "sun", temp: 24, rainChance: 5 }
-  ]
-
   return (
     <div className="relative min-h-screen w-full px-4 py-8 sm:px-8 lg:px-12">
       <AmbientBackground />
@@ -950,7 +1001,7 @@ const IrrigationDashboard: React.FC = () => {
 
         <SensorGrid data={sensorData} />
 
-        <WeatherForecastCard forecast={forecast} />
+        <WeatherForecastCard />
 
         <div className="flex flex-col gap-4">
           <ModeToggle mode={mode} onChange={setMode} />
@@ -963,7 +1014,11 @@ const IrrigationDashboard: React.FC = () => {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
             >
-              {mode === "auto" ? <AutoModePanel /> : <ManualModePanel />}
+              {mode === "auto" ? (
+                <AutoModePanel data={sensorData} />
+              ) : (
+                <ManualModePanel />
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
